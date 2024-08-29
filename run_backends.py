@@ -1,11 +1,11 @@
 import minizinc
 import logging
-from typing import *
+from typing import List
 from argparse import ArgumentParser, ArgumentTypeError
 from glob import glob
 from os import path
 from json import load
-from src.aux import *
+from src.aux import set_minizinc_driver_path, filter_minizinc_backends
 from src.outputters.outputter import Outputter
 from src.outputters.json_outputter import JsonOutputter
 from src.outputters.log_outputter import LogOutputter
@@ -88,11 +88,11 @@ if __name__ == '__main__':
                         nargs='+', help='String of the names of the ' +
                         'variables whose values are included in the output ' +
                         'table. The objective value is extracted ' +
-                        'automatically. This flag is optional!')
+                        'automatically. This flag is optional.')
 
     parser.add_argument('--backends', dest='backends', metavar='<backend>',
                         type=str, nargs='+', help='String of the names of ' +
-                        'the solvers to run. This flag is optional!')
+                        'the solvers to run. This flag is optional.')
 
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
                         help='Verbose logging.')

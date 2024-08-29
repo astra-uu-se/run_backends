@@ -1,6 +1,6 @@
 from datetime import timedelta
 from re import compile, UNICODE
-from typing import *
+from typing import Union, List, Dict
 from argparse import ArgumentTypeError
 
 
@@ -51,7 +51,10 @@ class StrToTimedelta:
     default_unit: str = 'ms'
 
     @staticmethod
-    def parse(str_vec: Union[str, List[str]]) -> timedelta:
+    def parse(str_vec: Union[int, float, str, List[str]]) -> timedelta:
+        if isinstance(str_vec, float) or isinstance(str_vec, int):
+            return __class__._dict_to_timedelta(
+                {__class__.default_unit: str_vec})
         if isinstance(str_vec, str):
             str_vec = str_vec.split()
         str_vec = [num_val.strip() for num_val in str_vec]

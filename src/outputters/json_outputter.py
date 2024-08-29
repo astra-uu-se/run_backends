@@ -1,4 +1,4 @@
-from typing import *
+from typing import List, Dict, Any, Union, Tuple
 from ..result import Result
 from .outputter import Outputter
 from json import dump

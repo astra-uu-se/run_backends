@@ -1,4 +1,4 @@
-from typing import *
+from typing import Union, List, Tuple
 from ..result import Result
 from .outputter import Outputter
 from datetime import datetime
@@ -8,7 +8,7 @@ from os import path
 def result_to_output(result: Result, best_result: Result,
                      single_result: bool) -> str:
     if result.error:
-        return f'ERR\t&\t--'
+        return 'ERR\t&\t--'
 
     s = ''
     if result.vars is not None and len(result.vars) > 0:
@@ -19,9 +19,9 @@ def result_to_output(result: Result, best_result: Result,
     if result.is_cop:
         s = s + ((', ' * min(len(s), 1)) +
                  ('--' if not result.has_solution else
-                 (f'$\\mathbf{{{result.objective}}}$'
+                 (f'\\textbf{{{result.objective}}}'
                   if result.compare(best_result) <= 0 and not single_result
-                  else f'${result.objective}$')))
+                  else f'{result.objective}')))
 
     time = 't/o'
     if not result.timed_out:

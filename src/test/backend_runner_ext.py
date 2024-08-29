@@ -1,5 +1,5 @@
 
-from typing import *
+from typing import Callable, Union, Tuple
 import minizinc
 from ..backend_runner import BackendRunner
 from ..result import Result

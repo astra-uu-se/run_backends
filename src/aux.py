@@ -1,5 +1,5 @@
 import minizinc
-from typing import *
+from typing import List, Tuple, Set
 
 
 def set_minizinc_driver_path(driver_path: str) -> None:

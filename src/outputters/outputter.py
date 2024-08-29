@@ -1,4 +1,4 @@
-from typing import *
+from typing import Union, List, Tuple
 from ..result import Result
 
 

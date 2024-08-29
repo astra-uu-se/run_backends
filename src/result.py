@@ -1,5 +1,5 @@
 import minizinc
-from typing import *
+from typing import List, Tuple, Any, Union, Dict
 from datetime import timedelta
 
 
@@ -61,7 +61,7 @@ class Result:
             return timedelta(
               milliseconds=(int(pow(2, 32)) if self.timed_out else 0))
         time: Union[int, timedelta] = self._result.statistics['time']
-        return timedelta(milliseconds=time) if type(time) == int else time
+        return timedelta(milliseconds=time) if isinstance(time, int) else time
 
     @property
     def has_solution(self) -> bool:

@@ -1,4 +1,4 @@
-from typing import *
+from typing import Dict, Any, Union, List, Tuple
 from ..result import Result
 from .outputter import Outputter
 from json import dump
@@ -70,13 +70,13 @@ class TestCreatorOutputter(Outputter):
         for result in results:
             results_data.append(result.__dict__)
             res_data = results_data[-1]
-            assert type(res_data['method']) == Method
+            assert isinstance(res_data['method'], Method)
             res_data['method'] = res_data['method'].name
             if result._result is None:
                 continue
             res_data['_result'] = res_data['_result'].__dict__
             inner = res_data['_result']
-            assert 'status' in inner and type(inner['status']) == Status
+            assert 'status' in inner and isinstance(inner['status'], Status)
             inner['status'] = inner['status'].name
             if inner.get('solution', None) is not None:
                 inner['solution'] = inner['solution'].__dict__
@@ -84,7 +84,7 @@ class TestCreatorOutputter(Outputter):
                 continue
             stats: Dict[str, Any] = inner['statistics']
             for key, value in stats.items():
-                if type(value) == timedelta:
+                if isinstance(value, timedelta):
                     stats[key] = value.total_seconds() * 1000
 
         self.last_run['results'] = results_data

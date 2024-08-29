@@ -1,4 +1,4 @@
-from typing import *
+from typing import Union, List, Tuple
 from ..result import Result
 from .outputter import Outputter
 import logging
@@ -57,7 +57,7 @@ class LogOutputter(Outputter):
 
         for flag, val in extra_flags:
             self.logger.info(
-              f'  flag: ' + f'{flag}:'.ljust(flag_padding) + f'value: {val}')
+              '  flag: ' + f'{flag}:'.ljust(flag_padding) + f'value: {val}')
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
                 num_backends: int, instance_index: int, num_instances: int,

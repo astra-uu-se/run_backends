@@ -1,6 +1,6 @@
 import minizinc
 import logging
-from typing import *
+from typing import List, Dict, Any, Union, Tuple
 from datetime import timedelta
 from src.result import Result
 from src.outputters.outputter import Outputter

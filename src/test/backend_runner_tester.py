@@ -1,8 +1,7 @@
-from typing import Any
+from typing import List
 import unittest
 import minizinc
 from ..result import Result
-from typing import *
 from .backend_runner_ext import BackendRunnerExt
 from json import loads
 from ..outputters.json_outputter import JsonOutputter

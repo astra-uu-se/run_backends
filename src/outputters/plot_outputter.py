@@ -1,6 +1,6 @@
-from typing import *
+from typing import Union, Tuple
 from ..result import Result
-from ..plot import *
+from ..plot import Plot
 from .outputter import Outputter
 
 
