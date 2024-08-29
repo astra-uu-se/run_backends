@@ -1,18 +1,13 @@
 {
   "driver_path": "/it/kurs/consprog/minizinc/MiniZincIDE/bin/",
-  "timeout": 120000,
+  "timeout": "2m",
   "backends": [
     "gecode",
     "cp-sat",
     "gurobi",
     "yuck",
-    "picat"
+    "picat",
+    "chuffed"
   ],
-  "backend_config": {
-    "cp-sat": {
-      "extra": {
-        "-p": 6
-      }
-    }
-  }
+  "backend_config": {}
 }
