@@ -6,19 +6,21 @@ from os import path
 
 
 def result_to_output(result: Result, best_result: Result,
-                     single_result: bool) -> str:
+                     single_result: bool,
+                     monospace_font) -> str:
+    em_dash = '-' if monospace_font else '--'
     if result.error:
-        return 'ERR\t&\t--'
+        return f'ERR\t&\t{em_dash}'
 
     s = ''
     if result.vars is not None and len(result.vars) > 0:
         s = ', '.join((str(val) for _, val in result.vars))
     elif result.is_csp:
-        s = 'SAT' if result.sat else ('UNSAT' if result.unsat else '--')
+        s = 'SAT' if result.sat else ('UNSAT' if result.unsat else em_dash)
 
     if result.is_cop:
         s = s + ((', ' * min(len(s), 1)) +
-                 ('--' if not result.has_solution else
+                 (em_dash if not result.has_solution else
                  (f'\\textbf{{{result.objective}}}'
                   if result.compare(best_result) <= 0 and not single_result
                   else f'{result.objective}')))
@@ -36,11 +38,14 @@ def result_to_output(result: Result, best_result: Result,
 class TexOutputter(Outputter):
     no_header: bool = False
     tex_file_path: Union[None, str] = None
+    monospace_font: bool = True
 
     def __init__(self, no_header: bool = False,
-                 tex_file_path: Union[None, str] = None):
+                 tex_file_path: Union[None, str] = None,
+                 monospace_font: bool = True):
         self.no_header = no_header
         self.tex_file_path = tex_file_path
+        self.monospace_font = monospace_font
 
     def print(self, s: str) -> None:
         if self.tex_file_path is None:
@@ -120,7 +125,8 @@ class TexOutputter(Outputter):
             elif r.compare_obj(best_r) == 0 and r.compare_time(best_r) < 0:
                 best_r = r
 
-        lines += ['\t& ' + result_to_output(r, best_r, len(results) == 1)
+        lines += ['\t& ' + result_to_output(r, best_r, len(results) == 1,
+                                            self.monospace_font)
                   for r in results]
 
         lines.append('\\\\')
