@@ -9,17 +9,19 @@ def result_to_output(result: Result, best_result: Result,
                      single_result: bool,
                      monospace_font) -> str:
     em_dash = '-' if monospace_font else '--'
+    separator = ',' if monospace_font else ', '
+
     if result.error:
         return f'ERR\t&\t{em_dash}'
 
     s = ''
     if result.vars is not None and len(result.vars) > 0:
-        s = ', '.join((str(val) for _, val in result.vars))
+        s = separator.join((str(val) for _, val in result.vars))
     elif result.is_csp:
         s = 'SAT' if result.sat else ('UNSAT' if result.unsat else em_dash)
 
     if result.is_cop:
-        s = s + ((', ' * min(len(s), 1)) +
+        s = s + ((separator * min(len(s), 1)) +
                  (em_dash if not result.has_solution else
                  (f'\\textbf{{{result.objective}}}'
                   if result.compare(best_result) <= 0 and not single_result
@@ -84,10 +86,12 @@ class TexOutputter(Outputter):
             instance_caption = 'instance'
         lines.append(instance_caption)
 
-        status = ', '.join('\\texttt{' + name.replace('_', '\\_') + '}'
-                           for name in vars)
+        separator = ',' if self.monospace_font else ', '
+
+        status = separator.join('\\texttt{' + name.replace('_', '\\_') + '}'
+                                for name in vars)
         if not is_csp:
-            status += (', ' * min(len(status), 1)) + '\\texttt{obj}'
+            status += (separator * min(len(status), 1)) + '\\texttt{obj}'
         elif len(status) == 0:
             status = '\\texttt{status}'
         lines += [f'\t& {status} & time' for _ in range(len(backends))]
