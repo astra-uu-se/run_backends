@@ -45,70 +45,90 @@ if __name__ == '__main__':
                                  'config.json')
 
     parser = ArgumentParser(
-        description='Helper for running your MiniZinc experiments.')
-    parser.add_argument(dest='model', metavar='<mzn file>', type=file_path,
-                        help='The model file(s) to run.')
+        description='Runs the MiniZinc CLI on a MiniZinc model for a set of '
+        'instances for a set of backends (solvers) and outputs the results in '
+        'a LaTeX table, where each best performing solver is highlighted in '
+        'the LaTeX table')
+
+    parser.add_argument(dest='model', metavar='<model>.mzn', type=file_path,
+                        help='The MiniZinc model file.')
 
     parser.add_argument('-t', '--timeout', dest='timeout', metavar='<timeout>',
                         type=str, nargs='*',
-                        help='The time-out in milliseconds or as one or more '
-                        'space seperated time units. For example, '
-                        '"1h 2m03s 100 ms".')
+                        help='The timeout in milliseconds or as one or more '
+                        'space separated time units for each instance. For '
+                        'example, "1h 2m03s 100ms".')
 
     parser.add_argument('--json-config', dest='json_config_path',
                         metavar='<json file>', type=file_path,
                         default=json_config_path,
-                        help='The path to a json configuration file.')
+                        help='The JSON configuration file for populating '
+                        'default values for this script.')
 
     data_group = parser.add_mutually_exclusive_group()
     data_group.add_argument('-r', '--param', dest='param',
                             metavar=('<param>', '<start>', '<stop>', '<inc>'),
                             nargs=4, type=str,
-                            help='The range to run experiments over, where ' +
-                            '<param> is the name of the parameter to change.')
+                            help='The range the model is to be run on, where '
+                            'parameter <param> is initially set to <start>, '
+                            'then iteratively modifies <param> adding <inv> '
+                            'until <param> reaches (or surpasses) <stop>. '
+                            'Note that <inc> can be a negative value. '
+                            'This flag is mutually exclusive with -d (--data)')
 
     data_group.add_argument('-d', '--data', dest='data_files',
-                            metavar='<data file>', nargs='*', type=str,
-                            help='The dzn files to run. Do not use -r and ' +
-                            '-d at the same time!')
+                            metavar='<data file>.{dzn, json}', nargs='*',
+                            type=str, help='The dzn or JSON instance file(s) '
+                            'to run the model on. This flag is mutually '
+                            'exclusive with -r (--param).')
 
     parser.add_argument('-o', '--output', dest='output',
                         metavar='<output file>', type=creatable_file,
-                        help='The file to write output to; this creates the ' +
-                        'file if it does not already exist, otherwise the ' +
-                        'results are appended to the end of the file, so ' +
-                        'consider deleting it first.')
+                        help='The LaTeX file to write the output to; this '
+                        'creates the file if it does not already exist, '
+                        'otherwise the results are appended to the end of the '
+                        'file. Note that this does not initially clear any '
+                        'previous text/data of <output file>.')
 
     parser.add_argument('--json-output', dest='json_output',
                         metavar='<output file>', type=creatable_file,
-                        help='The file to write json data of the runs to; ' +
-                        'this creates the file if it does not already exist.')
+                        help='The file to write statistics of the runs to. '
+                        'For each found solution to any instance, outputs '
+                        'data about the solver, time, and output variables. '
+                        'Creates file <output file> if it does not already '
+                        'exist.')
 
     parser.add_argument('--vars', dest='vars', metavar='<var>', type=str,
-                        nargs='+', help='String of the names of the ' +
-                        'variables whose values are included in the output ' +
-                        'table. The objective value is extracted ' +
-                        'automatically. This flag is optional.')
+                        nargs='+', help='The name of each variable that is '
+                        'to be included in the output LaTeX table. Note that '
+                        'the objective value is included in the LaTeX table '
+                        'automatically.')
 
     parser.add_argument('--backends', dest='backends', metavar='<backend>',
-                        type=str, nargs='+', help='String of the names of ' +
-                        'the solvers to run. This flag is optional.')
+                        type=str, nargs='+', help='The set of solvers to run '
+                        'the instances on.')
 
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
-                        help='Verbose logging.')
+                        help='Enables verbose logging to stderr with '
+                        'information about the runs.')
+
     parser.add_argument('--log-output', dest='log_output',
                         metavar='<output file>', type=creatable_file,
-                        help='writes all debug log messages to file; ' +
-                        'this creates the file if it does not already exist.')
+                        help='Writes all log messages also to the file '
+                        '<output file>. Creates file <output file> if it does '
+                        'not already exist.')
 
     parser.add_argument('--minizinc-path', dest='driver_path', type=dir_path,
                         help='The path to the MiniZinc CLI.')
+
     parser.add_argument('--no-header', dest='no_header', action='store_true',
                         help='Skip generating the latex table header.')
+
     parser.add_argument('--extra', dest='extra',
-                        metavar='" <flag 1> <flag 2>"', type=str,
-                        help='Use extra flags when running the MiniZinc CLI ' +
-                        '(note the prefixed space!).')
+                        metavar='<flag 1> <flag 2> ...', type=str,
+                        help='The extra flags without leading dashes that are '
+                        'passed to the MiniZinc CLI.')
+
     # parser.add_argument('--plot-output', dest='plot_output',
     #                     metavar='<output file>', type=creatable_file,
     #                     help='saves the results also as a png plot using ' +
@@ -119,8 +139,8 @@ if __name__ == '__main__':
         from src.outputters.test_creator_outputter import TestCreatorOutputter
         parser.add_argument('--create-tests', dest='create_tests',
                             metavar='<output file>', type=creatable_file,
-                            help='The file to write test json data of the '
-                            'runs to; this overwrites the file.')
+                            help='The file to write test JSON of the runs to; '
+                            'this overwrites the contents of <output file>.')
         imported_test_creator = True
     except ImportError:
         pass
@@ -135,7 +155,7 @@ if __name__ == '__main__':
         _, backends = filter_minizinc_backends(config['backends'])
         parser.epilog = ('The default backends of this script are: ' +
                          ', '.join((b_name for _, b_name in backends)) +
-                         '. To list more information on all backends and' +
+                         '. To list more information on all backends and ' +
                          'their underlying solving technologies, run ' +
                          f'{minizinc.default_driver._executable} --solvers".')
 
