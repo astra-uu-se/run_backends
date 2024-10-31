@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, List, Tuple, Dict
 from ..result import Result
 from .outputter import Outputter
 import logging
@@ -36,7 +36,7 @@ class LogOutputter(Outputter):
               timeout: int, is_csp: bool, vars: List[str] = [],
               param: Union[None, Tuple[str, int]] = None,
               is_data_file_run: bool = False,
-              extra_flags: List[Tuple[str, str]] = []) -> None:
+              extra_flags: Dict[str, Union[bool, str]] = dict()) -> None:
         entries = [
           ('model', model_name),
           ('problem type', ('Constraint Satisfaction Problem (CSP)' if is_csp
@@ -52,12 +52,11 @@ class LogOutputter(Outputter):
             return
 
         self.logger.info(f'extra flags ({len(extra_flags)}):')
-        flag_padding = 1 + max((len(f) for f, _ in extra_flags),
-                               default=0)
+        flag_padding = 1 + max((len(f) for f in extra_flags), default=0)
 
-        for flag, val in extra_flags:
+        for flag, val in extra_flags.items():
             self.logger.info(
-              '  flag: ' + f'{flag}:'.ljust(flag_padding) + f'value: {val}')
+              '  flag: ' + f'{flag}:'.ljust(flag_padding) + f' value: {val}')
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
                 num_backends: int, instance_index: int, num_instances: int,

@@ -1,7 +1,7 @@
 import minizinc
 import logging
 from typing import List
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, ArgumentTypeError, REMAINDER
 from glob import glob
 from os import path
 from json import load
@@ -124,10 +124,12 @@ if __name__ == '__main__':
     parser.add_argument('--no-header', dest='no_header', action='store_true',
                         help='Skip generating the latex table header.')
 
-    parser.add_argument('--extra', dest='extra',
-                        metavar='<flag 1> <flag 2> ...', type=str,
-                        help='The extra flags without leading dashes that are '
-                        'passed to the MiniZinc CLI.')
+    parser.add_argument('--extra', nargs=REMAINDER, dest='extra',
+                        type=str,
+                        help='The extra flags (with leading dashes) that are '
+                        'passed to the MiniZinc CLI. Note that all arguments '
+                        'following this flag are passed to the MiniZinc CLI, '
+                        'and is not parsed by this script.')
 
     # parser.add_argument('--plot-output', dest='plot_output',
     #                     metavar='<output file>', type=creatable_file,

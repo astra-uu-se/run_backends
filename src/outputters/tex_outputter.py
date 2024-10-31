@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, List, Tuple, Dict
 from ..result import Result
 from .outputter import Outputter
 from datetime import datetime
@@ -60,7 +60,7 @@ class TexOutputter(Outputter):
               timeout: int, is_csp: bool, vars: List[str] = [],
               param: Union[None, Tuple[str, int]] = None,
               is_data_file_run: bool = False,
-              extra_flags: List[Tuple[str, str]] = []) -> None:
+              extra_flags: Dict[str, Union[bool, str]] = []) -> None:
 
         assert len(backends) > 0
         lines = [

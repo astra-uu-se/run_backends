@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, List, Tuple, Dict
 from ..result import Result
 
 
@@ -10,7 +10,7 @@ class Outputter:
               timeout: int, is_csp: bool, vars: List[str],
               param: Union[None, Tuple[str, int]],
               is_data_file_run: bool,
-              extra_flags: List[Tuple[str, str]]) -> None:
+              extra_flags: Dict[str, Union[bool, str]]) -> None:
         pass
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,

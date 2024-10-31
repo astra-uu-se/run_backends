@@ -14,7 +14,7 @@ class BackendRunner:
     vars: List[str] = []
     backends: List[Tuple[str, str]] = []
     outputters: List[Outputter] = []
-    extra: Dict[str, str] = {}
+    extra: Dict[str, Union[str, bool]] = {}
 
     def get_extra(self, backend_id: str) -> Dict[str, str]:
         return dict(self.backend_config.get(backend_id, {}).get('extra', {}),
@@ -23,7 +23,7 @@ class BackendRunner:
     def __init__(self, model: Union[None, str], timeout: int,
                  vars: List[str] = [], backends: List[str] = None,
                  outputters: List[Outputter] = [],
-                 extra: Dict[str, str] = {},
+                 extra: List[str] = [],
                  backend_config: Dict[str, Dict[str, Any]] = {}):
         self.logger = logging.getLogger('BackendRunner')
         self.model = model
@@ -44,19 +44,18 @@ class BackendRunner:
                               ', '.join(erronous_backends) + '}')
             exit(1)
 
-    def parse_extra(self, extra: Union[None, str]) -> Dict[str, str]:
+    def parse_extra(self, extra: List[str]) -> Dict[str, Union[bool, str]]:
         if extra is None or len(extra) == 0:
             return {}
-        extra_flags = {}
+        extra_flags: Dict[str, Union[bool, str]] = {}
         i = 0
-        split_extra = extra.split()
 
-        while i < len(split_extra):
-            flag = split_extra[i]
+        while i < len(extra):
+            flag = extra[i]
             i += 1
             value = True
-            if i < len(split_extra) and not split_extra[i].startswith('-'):
-                value = split_extra[i]
+            if i < len(extra) and not extra[i].startswith('-'):
+                value = extra[i]
                 i += 1
             extra_flags[flag] = value
 
