@@ -37,7 +37,8 @@ class JsonOutputter(Outputter):
           'timed_out': result.timed_out,
           'time': int(result.time.total_seconds() * 1000),
           'has_solution': result.has_solution,
-          'vars': result.all_vars()
+          'vars': result.all_vars(),
+          'solutions': result.solutions()
         })
 
     def outro(self) -> None:

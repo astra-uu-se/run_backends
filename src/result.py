@@ -138,7 +138,14 @@ class Result:
         if self._result.solution is not None:
             if isinstance(self._result.solution, list):
                 if len(self._result.solution) > 0:
-                    sol = next(self._result.solution).__dict__
+                    sol = self._result.solution[-1].__dict__
             else:
                 sol = self._result.solution.__dict__
         return {**sol, **{k: v for (k, v) in self.vars}}
+
+    def solutions(self) -> List:
+        if self._result.solution is None:
+           return []
+        if isinstance(self._result.solution, list):
+            return [s.__dict__ for s in self._result.solution]
+        return [self._result.solution.__dict__]

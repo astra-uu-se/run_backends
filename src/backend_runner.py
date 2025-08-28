@@ -97,6 +97,8 @@ class BackendRunner:
             kwargs = self.get_extra(backend_id)
             if '--all-solutions' in kwargs:
                 kwargs['all_solutions'] = kwargs.pop('--all-solutions')
+            if '--intermediate' in kwargs:
+                kwargs['intermediate_solutions'] = kwargs.pop('--intermediate')
             kwargs['timeout'] = timedelta(milliseconds=self.timeout)
             mzn_result = instance.solve(**kwargs)
             return Result(instance.method, mzn_result,
