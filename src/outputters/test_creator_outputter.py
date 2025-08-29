@@ -24,13 +24,13 @@ class TestCreatorOutputter(Outputter):
     def set_up(self, param_name: Union[None, str]) -> None:
         self.json_data = dict()
 
-    def intro(self, backends: List[Tuple[str, str]], model_name: str,
+    def intro(self, backends: List[Tuple[str, str]], model_names: List[str],
               timeout: int, is_csp: bool, vars: List[str],
               param: Union[None, Tuple[str, int]],
               is_data_file_run: bool,
               extra_flags: Dict[str, Union[bool, str]]) -> None:
         self.json_data['backends'] = backends.copy()
-        self.json_data['model_name'] = model_name
+        self.json_data['model_names'] = model_names
         self.json_data['timeout'] = timeout
         self.json_data['is_csp'] = is_csp
         self.json_data['vars'] = vars.copy()

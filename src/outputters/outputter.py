@@ -6,7 +6,7 @@ class Outputter:
     def set_up(self, param_name: Union[None, str]) -> None:
         pass
 
-    def intro(self, backends: List[Tuple[str, str]], model_name: str,
+    def intro(self, backends: List[Tuple[str, str]], model_name: List[str],
               timeout: int, is_csp: bool, vars: List[str],
               param: Union[None, Tuple[str, int]],
               is_data_file_run: bool,

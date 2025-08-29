@@ -41,6 +41,19 @@ if __name__ == '__main__':
         except ValueError:
             return False
 
+    def glob_find(search_paths: List[str]) -> List[str]:
+        found_files = []
+        seen_files = set()
+        globs = [glob(sp) for sp in search_paths]
+        for i, g in enumerate(globs):
+            if len(g) == 0:
+                logging.warning(f'No files found at path "{search_paths[i]}"')
+            for data_file in g:
+                if data_file not in seen_files:
+                    found_files.append(data_file)
+                    seen_files.add(data_file)
+        return found_files        
+
     json_config_path = path.join(path.dirname(path.realpath(__file__)),
                                  'config.json')
 
@@ -50,8 +63,8 @@ if __name__ == '__main__':
         'a LaTeX table, where each best performing solver is highlighted in '
         'the LaTeX table')
 
-    parser.add_argument(dest='model', metavar='<model>.mzn', type=file_path,
-                        help='The MiniZinc model file.')
+    parser.add_argument(dest='models', metavar='<model>.mzn', type=str,
+                        nargs='+', help='The MiniZinc model file(s).')
 
     parser.add_argument('-t', '--timeout', dest='timeout', metavar='<timeout>',
                         type=str, nargs='*',
@@ -78,9 +91,10 @@ if __name__ == '__main__':
 
     data_group.add_argument('-d', '--data', dest='data_files',
                             metavar='<data file>.{dzn, json}', nargs='*',
-                            type=str, help='The dzn or JSON instance file(s) '
-                            'to run the model on. This flag is mutually '
-                            'exclusive with -r (--param).')
+                            type=file_path, 
+                            help='The dzn or JSON instance file(s) to run the '
+                            'model on. This flag is mutually exclusive with '
+                            '-r (--param).')
 
     parser.add_argument('-o', '--output', dest='output',
                         metavar='<output file>', type=creatable_file,
@@ -191,8 +205,10 @@ if __name__ == '__main__':
     # if args.plot_output is not None:
     #     outputters.append(PlotOutputter(args.plot_output))
 
+    model_files = glob_find(args.models)
+
     backend_runner = BackendRunner(
-        args.model,
+        model_files,
         timeout.total_seconds() * 1000,
         vars=args.vars,
         backends=args.backends,
@@ -217,14 +233,7 @@ if __name__ == '__main__':
 
         backend_runner.run_with_param(param_name, start, stop, increment)
     elif args.data_files is not None:
-        data_files = []
-        seen_data_files = set()
-        for data_file in (fp for glob_list in args.data_files
-                          for fp in glob(glob_list)):
-            if data_file in seen_data_files:
-                continue
-            data_files.append(data_file)
-            seen_data_files.add(data_file)
+        data_files = glob_find(args.data_files)
         backend_runner.run_with_data_files(data_files)
     else:
         backend_runner.run()

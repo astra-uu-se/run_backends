@@ -32,13 +32,13 @@ class LogOutputter(Outputter):
               '%(asctime)s | %(message)s', '%Y-%m-%d %H:%M:%S'))
             self.logger.addHandler(file_handler)
 
-    def intro(self, backends: List[Tuple[str, str]], model_name: str,
+    def intro(self, backends: List[Tuple[str, str]], model_names: List[str],
               timeout: int, is_csp: bool, vars: List[str] = [],
               param: Union[None, Tuple[str, int]] = None,
               is_data_file_run: bool = False,
               extra_flags: Dict[str, Union[bool, str]] = dict()) -> None:
         entries = [
-          ('model', model_name),
+          ('model file(s)', '[' + ', '.join(model_names) + ']'),
           ('problem type', ('Constraint Satisfaction Problem (CSP)' if is_csp
                             else 'Constrained Optimisation Problem (COP)')),
           ('timeout', f'{timeout}ms')

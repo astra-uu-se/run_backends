@@ -9,7 +9,7 @@ from .aux import filter_minizinc_backends
 
 class BackendRunner:
     logger: logging.Logger = None
-    model: str = ''
+    model_files: List[str] = []
     timeout: int = 0
     vars: List[str] = []
     backends: List[Tuple[str, str]] = []
@@ -20,13 +20,13 @@ class BackendRunner:
         return dict(self.backend_config.get(backend_id, {}).get('extra', {}),
                     **self.extra)
 
-    def __init__(self, model: Union[None, str], timeout: int,
+    def __init__(self, model_files: Union[None, List[str]], timeout: int,
                  vars: List[str] = [], backends: List[str] = None,
                  outputters: List[Outputter] = [],
                  extra: List[str] = [],
                  backend_config: Dict[str, Dict[str, Any]] = {}):
         self.logger = logging.getLogger('BackendRunner')
-        self.model = model
+        self.model_files = model_files
         self.timeout = timeout
         self.outputters = outputters
         self.vars = [] if vars is None else vars
@@ -77,7 +77,7 @@ class BackendRunner:
     def _get_instance(self, backend_id: str,
                       data_file: Union[None, str] = None) -> minizinc.Instance:
         try:
-            model = minizinc.Model(self.model)
+            model = minizinc.Model(self.model_files)
 
             if data_file is not None:
                 model.add_file(data_file)
@@ -119,7 +119,7 @@ class BackendRunner:
         if generate_intro:
             for outputter in self.outputters:
                 outputter.intro(
-                  self.backends, self.model, self.timeout,
+                  self.backends, self.model_files, self.timeout,
                   instance.method == minizinc.Method.SATISFY,
                   self.vars,
                   param[0] if param is not None else None,
