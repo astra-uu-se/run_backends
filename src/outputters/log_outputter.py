@@ -96,6 +96,10 @@ class LogOutputter(Outputter):
             elif result.unsat:
                 s = 'UNSAT'
             else:
+                logging.warning(f'status: {result._result.status}')
+                logging.warning(f'_all_solutions: {result._all_solutions}')
+                logging.warning(f'all_solutions: {result.all_solutions}')
+                logging.warning(f'_result.solution: {result._result.solution}')
                 s = 'UNKNOWN'
             self.logger.info(f'{padding}{s}')
         else:

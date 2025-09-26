@@ -27,8 +27,8 @@ class Result:
     @property
     def sat(self) -> bool:
         return self._result.status == minizinc.result.Status.SATISFIED or (
-           self._all_solutions and
-           self.all_solutions and self._result.solution is not None)
+            (self._all_solutions or self.all_solutions) and 
+            self._result.solution is not None)
 
     @property
     def all_solutions(self) -> bool:
