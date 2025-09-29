@@ -3,6 +3,18 @@ from ..result import Result
 from .outputter import Outputter
 import logging
 from sys import stderr
+import minizinc
+import re
+
+
+def get_mzn_version() -> str:
+  version_str = minizinc.default_driver.minizinc_version
+  if not isinstance(version_str, str):
+    return 'UNKNOWN'
+  match = re.search(r'version\s*([\d.]+)', version_str)
+  if match is None:
+    return 'UNKNOWN'
+  return match.group(1)
 
 
 class LogOutputter(Outputter):
@@ -38,6 +50,7 @@ class LogOutputter(Outputter):
               is_data_file_run: bool = False,
               extra_flags: Dict[str, Union[bool, str]] = dict()) -> None:
         entries = [
+          ('minizinc version', get_mzn_version()),
           ('model file(s)', '[' + ', '.join(model_names) + ']'),
           ('problem type', ('Constraint Satisfaction Problem (CSP)' if is_csp
                             else 'Constrained Optimisation Problem (COP)')),
@@ -96,13 +109,10 @@ class LogOutputter(Outputter):
             elif result.unsat:
                 s = 'UNSAT'
             else:
-                logging.warning(f'status: {result._result.status}')
-                logging.warning(f'_all_solutions: {result._all_solutions}')
-                logging.warning(f'all_solutions: {result.all_solutions}')
-                logging.warning(f'_result.solution: {result._result.solution}')
                 s = 'UNKNOWN'
             self.logger.info(f'{padding}{s}')
         else:
+            self.logger.warning(result._result.__dict__)
             if result.optimal_solution:
                 result_suffix = ' (proven optimum)'
             else:
