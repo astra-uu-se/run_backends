@@ -112,7 +112,6 @@ class LogOutputter(Outputter):
                 s = 'UNKNOWN'
             self.logger.info(f'{padding}{s}')
         else:
-            self.logger.warning(result._result.__dict__)
             if result.optimal_solution:
                 result_suffix = ' (proven optimum)'
             else:
