@@ -164,7 +164,11 @@ if __name__ == '__main__':
     with open(json_config_path, 'r') as json_file:
         config = load(json_file)
 
-    if 'driver_path' in config:
+    args = parser.parse_args()
+
+    if args.driver_path is not None:
+        set_minizinc_driver_path(args.driver_path)
+    elif 'driver_path' in config:
         set_minizinc_driver_path(config['driver_path'])
 
     if 'backends' in config:
@@ -175,10 +179,6 @@ if __name__ == '__main__':
                          'their underlying solving technologies, run ' +
                          f'{minizinc.default_driver._executable} --solvers".')
 
-    args = parser.parse_args()
-
-    if args.driver_path is not None:
-        set_minizinc_driver_path(args.driver_path)
     if args.timeout is None:
         args.timeout = config.get('timeout', None)
     try:
