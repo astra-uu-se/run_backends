@@ -9,5 +9,21 @@
     "picat",
     "chuffed"
   ],
-  "backend_config": {}
+  "backend_config": {
+    "cp-sat": {
+      "extra": {
+        "--parallel": 8
+      }
+    },
+    "gurobi": {
+      "extra": {
+        "--parallel": 8
+      }
+    },
+    "yuck": {
+      "extra": {
+        "--parallel": 8
+      }
+    }
+  }
 }

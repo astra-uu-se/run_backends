@@ -117,14 +117,17 @@ class BackendRunner:
         instance = self._get_instance(backend_id, data_file=data_file)
 
         if generate_intro:
+            backend_extra_flags = {
+              id: self.backend_config.get(id, {}).get('extra', {})
+              for id, _ in self.backends}
             for outputter in self.outputters:
                 outputter.intro(
                   self.backends, self.model_files, self.timeout,
                   instance.method == minizinc.Method.SATISFY,
-                  self.vars,
-                  param[0] if param is not None else None,
+                  self.vars, param[0] if param is not None else None,
                   is_data_file_run=data_file is not None,
-                  extra_flags=self.extra)
+                  extra_flags=self.extra,
+                  backend_extra_flags=backend_extra_flags)
 
         for outputter in self.outputters:
             outputter.pre_run(

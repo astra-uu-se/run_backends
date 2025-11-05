@@ -48,18 +48,34 @@ class LogOutputter(Outputter):
               timeout: int, is_csp: bool, vars: List[str] = [],
               param: Union[None, Tuple[str, int]] = None,
               is_data_file_run: bool = False,
-              extra_flags: Dict[str, Union[bool, str]] = dict()) -> None:
+              extra_flags: Dict[str, Union[bool, str]] = dict(),
+              backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
         entries = [
           ('minizinc version', get_mzn_version()),
           ('model file(s)', '[' + ', '.join(model_names) + ']'),
           ('problem type', ('Constraint Satisfaction Problem (CSP)' if is_csp
                             else 'Constrained Optimisation Problem (COP)')),
-          ('timeout', f'{timeout}ms')
+          ('timeout', f'{timeout}ms'),
+          ('backends', str(len(backends)))
         ]
         label_padding = 2 + max((len(label) for label, _ in entries),
                                 default=0)
         for label, v in entries:
             self.logger.info(f'{label}:'.ljust(label_padding) + v)
+
+        flag_padding = max((len(f)
+                            for flags in backend_extra_flags
+                            for f in flags), default=0)
+        
+        backend_padding = 1 + max((len(n) for _, n in backends), default=0)
+        for backend_id, backend_name in backends:
+            self.logger.info(f'  ' +
+                             f'{backend_name};'.ljust(backend_padding) +
+                             f' id: {backend_id}')
+            for flag, val in backend_extra_flags.get(backend_id, dict()).items():
+                self.logger.info(
+                  str(' ' * 4) + 'flag: ' + f'{flag};'.ljust(flag_padding) +
+                  f' value: {val}')
 
         if len(extra_flags) == 0:
             return
@@ -69,7 +85,7 @@ class LogOutputter(Outputter):
 
         for flag, val in extra_flags.items():
             self.logger.info(
-              '  flag: ' + f'{flag}:'.ljust(flag_padding) + f' value: {val}')
+              '  flag: ' + f'{flag};'.ljust(flag_padding) + f' value: {val}')
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
                 num_backends: int, instance_index: int, num_instances: int,

@@ -28,7 +28,8 @@ class TestCreatorOutputter(Outputter):
               timeout: int, is_csp: bool, vars: List[str],
               param: Union[None, Tuple[str, int]],
               is_data_file_run: bool,
-              extra_flags: Dict[str, Union[bool, str]]) -> None:
+              extra_flags: Dict[str, Union[bool, str]],
+              backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
         self.json_data['backends'] = backends.copy()
         self.json_data['model_names'] = model_names
         self.json_data['timeout'] = timeout
@@ -37,6 +38,7 @@ class TestCreatorOutputter(Outputter):
         self.json_data['param'] = param
         self.json_data['is_data_file_run'] = is_data_file_run
         self.json_data['extra_flags'] = extra_flags.copy()
+        self.json_data['backend_extra_flags'] = backend_extra_flags.copy()
         self.json_data['runs'] = []
         self.json_data['num_instances'] = 0
         self.json_data['num_backends'] = len(backends)

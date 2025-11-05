@@ -10,7 +10,8 @@ class Outputter:
               timeout: int, is_csp: bool, vars: List[str],
               param: Union[None, Tuple[str, int]],
               is_data_file_run: bool,
-              extra_flags: Dict[str, Union[bool, str]]) -> None:
+              extra_flags: Dict[str, Union[bool, str]],
+              backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
         pass
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
