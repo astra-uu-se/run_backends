@@ -49,6 +49,8 @@ class Result:
 
     @property
     def timed_out(self) -> bool:
+        if self.unsat:
+            return False
         if self.is_cop:
             return not self.optimal_solution
         if self._all_solutions:
@@ -58,10 +60,19 @@ class Result:
     @property
     def time(self) -> timedelta:
         if 'time' not in self._result.statistics:
-            return timedelta(
-              milliseconds=(int(pow(2, 32)) if self.timed_out else 0))
+            if self.timed_out:
+                return timedelta(milliseconds=(int(pow(2, 32))))
+            time = timedelta(milliseconds=0)
+            for prop in ['flatTime', 'initTime', 'solveTime']:
+                if prop not in self._result.statistics:
+                    continue
+                t: Union[int, timedelta] = self._result.statistics[prop]
+                time += (t if isinstance(t, timedelta)
+                         else timedelta(milliseconds=t))
+            return time
         time: Union[int, timedelta] = self._result.statistics['time']
-        return timedelta(milliseconds=time) if isinstance(time, int) else time
+        return (time if isinstance(time, timedelta)
+                else timedelta(milliseconds=time))
 
     @property
     def has_solution(self) -> bool:

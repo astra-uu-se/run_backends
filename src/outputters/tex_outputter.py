@@ -17,10 +17,12 @@ def result_to_output(result: Result, best_result: Result,
     s = ''
     if result.vars is not None and len(result.vars) > 0:
         s = separator.join((str(val) for _, val in result.vars))
+    elif result.unsat:
+        s = 'UNSAT'
     elif result.is_csp:
-        s = 'SAT' if result.sat else ('UNSAT' if result.unsat else em_dash)
+        s = 'SAT' if result.sat else em_dash
 
-    if result.is_cop:
+    if result.is_cop and not result.unsat:
         s = s + ((separator * min(len(s), 1)) +
                  (em_dash if not result.has_solution else
                  (f'\\textbf{{{result.objective}}}'

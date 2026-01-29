@@ -119,11 +119,11 @@ class LogOutputter(Outputter):
         else:
             time = f'{int(result.time.total_seconds() * 1000)}ms'
         self.logger.info(f'{padding}time: {time}')
-        if result.is_csp:
-            if result.sat:
-                s = 'SAT'
-            elif result.unsat:
+        if result.unsat or result.is_csp:
+            if result.unsat:
                 s = 'UNSAT'
+            elif result.sat:
+                s = 'SAT'
             else:
                 s = 'UNKNOWN'
             self.logger.info(f'{padding}{s}')
