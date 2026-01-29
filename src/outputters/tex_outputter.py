@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple, Dict
+from typing import Optional, Union, List, Tuple, Dict
 from ..result import Result
 from .outputter import Outputter
 from datetime import datetime
@@ -41,11 +41,11 @@ def result_to_output(result: Result, best_result: Result,
 
 class TexOutputter(Outputter):
     no_header: bool = False
-    tex_file_path: Union[None, str] = None
+    tex_file_path: Optional[str] = None
     monospace_font: bool = True
 
     def __init__(self, no_header: bool = False,
-                 tex_file_path: Union[None, str] = None,
+                 tex_file_path: Optional[str] = None,
                  monospace_font: bool = True):
         self.no_header = no_header
         self.tex_file_path = tex_file_path
@@ -60,7 +60,7 @@ class TexOutputter(Outputter):
 
     def intro(self, backends: List[Tuple[str, str]], model_name: List[str],
               timeout: int, is_csp: bool, vars: List[str] = [],
-              param: Union[None, Tuple[str, int]] = None,
+              param: Optional[Tuple[str, int]] = None,
               is_data_file_run: bool = False,
               extra_flags: Dict[str, Union[bool, str]] = dict(),
               backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
@@ -110,8 +110,8 @@ class TexOutputter(Outputter):
         self.print('\n'.join(lines))
 
     def instance(self, results: List[Result],
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str]) -> None:
+                 param: Optional[Tuple[str, int]],
+                 data_file: Optional[str]) -> None:
         if len(results) == 0:
             return
 
@@ -123,7 +123,7 @@ class TexOutputter(Outputter):
             file_name = path.splitext(path.split(data_file)[1])[0]
             lines.append(file_name.replace('_', '\\_'))
 
-        best_r: Union[None, Result] = None
+        best_r: Optional[Result] = None
         for r in results:
             if best_r is None:
                 best_r = r

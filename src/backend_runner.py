@@ -1,6 +1,6 @@
 import minizinc
 import logging
-from typing import List, Dict, Any, Union, Tuple
+from typing import List, Dict, Any, Union, Tuple, Optional
 from datetime import timedelta
 from src.result import Result
 from src.outputters.outputter import Outputter
@@ -20,7 +20,7 @@ class BackendRunner:
         return dict(self.backend_config.get(backend_id, {}).get('extra', {}),
                     **self.extra)
 
-    def __init__(self, model_files: Union[None, List[str]], timeout: int,
+    def __init__(self, model_files: Optional[List[str]], timeout: int,
                  vars: List[str] = [], backends: List[str] = None,
                  outputters: List[Outputter] = [],
                  extra: List[str] = [],
@@ -75,7 +75,7 @@ class BackendRunner:
         return backend_config
 
     def _get_instance(self, backend_id: str,
-                      data_file: Union[None, str] = None) -> minizinc.Instance:
+                      data_file: Optional[str] = None) -> minizinc.Instance:
         try:
             model = minizinc.Model(self.model_files)
 
@@ -90,7 +90,7 @@ class BackendRunner:
             exit(1)
 
     def _get_result(self, backend_id: str, instance: minizinc.Instance,
-                    param: Union[None, Tuple[str, int]] = None) -> Result:
+                    param: Optional[Tuple[str, int]] = None) -> Result:
         try:
             if isinstance(param, tuple):
                 instance[param[0]] = param[1]
@@ -112,8 +112,8 @@ class BackendRunner:
     def _run_single(self, generate_intro: bool, backend_id: str,
                     backend_name: str, backend_index: int, instance_index: int,
                     num_instances: int,
-                    param: Union[None, Tuple[str, int]] = None,
-                    data_file: Union[None, str] = None) -> Result:
+                    param: Optional[Tuple[str, int]] = None,
+                    data_file: Optional[str] = None) -> Result:
         instance = self._get_instance(backend_id, data_file=data_file)
 
         if generate_intro:

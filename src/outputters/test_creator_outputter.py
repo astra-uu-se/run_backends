@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union, List, Tuple
+from typing import Dict, Any, Optional, Union, List, Tuple
 from ..result import Result
 from .outputter import Outputter
 from json import dump
@@ -8,7 +8,7 @@ from minizinc import Method, Status
 
 class TestCreatorOutputter(Outputter):
     json_data: Dict[str, Any] = []
-    json_file_path: Union[None, str] = None
+    json_file_path: Optional[str] = None
 
     @property
     def runs(self) -> List[Dict[str, Any]]:
@@ -18,15 +18,15 @@ class TestCreatorOutputter(Outputter):
     def last_run(self) -> Dict[str, Any]:
         return self.json_data['runs'][-1]
 
-    def __init__(self, json_file_path: Union[None, str] = None):
+    def __init__(self, json_file_path: Optional[str] = None):
         self.json_file_path = json_file_path
 
-    def set_up(self, param_name: Union[None, str]) -> None:
+    def set_up(self, param_name: Optional[str]) -> None:
         self.json_data = dict()
 
     def intro(self, backends: List[Tuple[str, str]], model_names: List[str],
               timeout: int, is_csp: bool, vars: List[str],
-              param: Union[None, Tuple[str, int]],
+              param: Optional[Tuple[str, int]],
               is_data_file_run: bool,
               extra_flags: Dict[str, Union[bool, str]],
               backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
@@ -45,8 +45,8 @@ class TestCreatorOutputter(Outputter):
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
                 num_backends: int, instance_index: int, num_instances: int,
-                param: Union[None, Tuple[str, int]],
-                data_file: Union[None, str]) -> None:
+                param: Optional[Tuple[str, int]],
+                data_file: Optional[str]) -> None:
         self.json_data['num_instances'] = num_instances
         if backend_index == 0:
             assert len(self.runs) == instance_index
@@ -61,8 +61,8 @@ class TestCreatorOutputter(Outputter):
               'results': []})
 
     def instance(self, results: List[Result],
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str]) -> None:
+                 param: Optional[Tuple[str, int]],
+                 data_file: Optional[str]) -> None:
         pn, pv = param if param is not None else (None, None)
         assert self.last_run['param_name'] == pn
         assert self.last_run['param_value'] == pv

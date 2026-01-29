@@ -1,17 +1,17 @@
-from typing import Union, Tuple
+from typing import Optional, Tuple
 from ..result import Result
 from ..plot import Plot
 from .outputter import Outputter
 
 
 class PlotOutputter(Outputter):
-    plot: Union[None, Plot] = None
+    plot: Optional[Plot] = None
     plot_file_path: str = ''
 
     def __init__(self, plot_file_path: str):
         self.plot_file_path = plot_file_path
 
-    def set_up(self, param_name: Union[None, str]) -> None:
+    def set_up(self, param_name: Optional[str]) -> None:
         if param_name is None:
             self.plot: Plot = Plot()
         else:
@@ -19,8 +19,8 @@ class PlotOutputter(Outputter):
 
     def post_run(self, backend_id: str, backend_name: str, backend_index: int,
                  num_backends: int, instance_index: int, num_instances: int,
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str],
+                 param: Optional[Tuple[str, int]],
+                 data_file: Optional[str],
                  result: Result) -> None:
         name: str = ''
         if param is not None:

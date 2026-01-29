@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple, Dict
+from typing import Optional, Union, List, Tuple, Dict
 from ..result import Result
 from .outputter import Outputter
 import logging
@@ -20,7 +20,7 @@ def get_mzn_version() -> str:
 class LogOutputter(Outputter):
     logger: logging.Logger = None
 
-    def __init__(self, level: int, log_file_path: Union[None, str] = None):
+    def __init__(self, level: int, log_file_path: Optional[str] = None):
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(level)
         self.logger.propagate = False
@@ -46,7 +46,7 @@ class LogOutputter(Outputter):
 
     def intro(self, backends: List[Tuple[str, str]], model_names: List[str],
               timeout: int, is_csp: bool, vars: List[str] = [],
-              param: Union[None, Tuple[str, int]] = None,
+              param: Optional[Tuple[str, int]] = None,
               is_data_file_run: bool = False,
               extra_flags: Dict[str, Union[bool, str]] = dict(),
               backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
@@ -89,8 +89,8 @@ class LogOutputter(Outputter):
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
                 num_backends: int, instance_index: int, num_instances: int,
-                param: Union[None, Tuple[str, int]],
-                data_file: Union[None, str]) -> None:
+                param: Optional[Tuple[str, int]],
+                data_file: Optional[str]) -> None:
         if backend_index == 0:
             header_suffix = (
               '' if num_instances == 0
@@ -108,8 +108,8 @@ class LogOutputter(Outputter):
 
     def post_run(self, backend_id: str, backend_name: str, backend_index: int,
                  num_backends: int, instance_index: int, num_instances: int,
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str],
+                 param: Optional[Tuple[str, int]],
+                 data_file: Optional[str],
                  result: Result) -> None:
         padding = '    '
         for var, val in result.vars:

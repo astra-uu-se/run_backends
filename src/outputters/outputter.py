@@ -1,14 +1,14 @@
-from typing import Union, List, Tuple, Dict
+from typing import Optional, Union, List, Tuple, Dict
 from ..result import Result
 
 
 class Outputter:
-    def set_up(self, param_name: Union[None, str]) -> None:
+    def set_up(self, param_name: Optional[str]) -> None:
         pass
 
     def intro(self, backends: List[Tuple[str, str]], model_name: List[str],
               timeout: int, is_csp: bool, vars: List[str],
-              param: Union[None, Tuple[str, int]],
+              param: Optional[Tuple[str, int]],
               is_data_file_run: bool,
               extra_flags: Dict[str, Union[bool, str]],
               backend_extra_flags: Dict[str, Dict[str, Union[bool, str]]] = dict()) -> None:
@@ -16,20 +16,20 @@ class Outputter:
 
     def pre_run(self, backend_id: str, backend_name: str, backend_index: int,
                 num_backends: int, instance_index: int, num_instances: int,
-                param: Union[None, Tuple[str, int]],
-                data_file: Union[None, str]) -> None:
+                param: Optional[Tuple[str, int]],
+                data_file: Optional[str]) -> None:
         pass
 
     def post_run(self, backend_id: str, backend_name: str, backend_index: int,
                  num_backends: int, instance_index: int, num_instances: int,
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str],
+                 param: Optional[Tuple[str, int]],
+                 data_file: Optional[str],
                  result: Result) -> None:
         pass
 
     def instance(self, results: List[Result],
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str]) -> None:
+                 param: Optional[Tuple[str, int]],
+                 data_file: Optional[str]) -> None:
         pass
 
     def outro(self) -> None:

@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Union, Tuple
+from typing import List, Dict, Any, Optional, Union, Tuple
 from ..result import Result
 from .outputter import Outputter
 from json import dump
@@ -6,18 +6,18 @@ from json import dump
 
 class JsonOutputter(Outputter):
     json_data: List[Dict[str, Any]] = []
-    json_file_path: Union[None, str] = None
+    json_file_path: Optional[str] = None
 
-    def __init__(self, json_file_path: Union[None, str] = None):
+    def __init__(self, json_file_path: Optional[str] = None):
         self.json_file_path = json_file_path
 
-    def set_up(self, param_name: Union[None, str]) -> None:
+    def set_up(self, param_name: Optional[str]) -> None:
         self.json_data = []
 
     def post_run(self, backend_id: str, backend_name: str, backend_index: int,
                  num_backends: int, instance_index: int, num_instances: int,
-                 param: Union[None, Tuple[str, int]],
-                 data_file: Union[None, str],
+                 param: Union[Tuple[str, int]],
+                 data_file: Optional[str],
                  result: Result) -> None:
         self.json_data.append({
           'backend_jd': backend_id,

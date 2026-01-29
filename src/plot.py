@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union, Dict
+from typing import List, Tuple, Union, Dict, Optional
 from .result import Result
 import logging
 import matplotlib.pyplot as plt
@@ -25,7 +25,7 @@ class PlotLine:
         return [instance_name for instance_name, _ in self.data]
 
     @property
-    def y_vals(self) -> List[Union[None, float]]:
+    def y_vals(self) -> List[Optional[float]]:
         if len(self.data) == 0:
             return []
         if self.data[0][1].is_csp:
@@ -65,7 +65,7 @@ class Plot:
 
     @property
     def ylabel(self) -> str:
-        result: Union[Result, None] = next(
+        result: Optional[Result] = next(
             (pl.data[0][1]
              for pl in self.plot_lines.values() if len(pl.data) > 0))
         if result is None:

@@ -1,5 +1,5 @@
 
-from typing import Callable, Union, Tuple
+from typing import Callable, Tuple
 import minizinc
 from ..backend_runner import BackendRunner
 from ..result import Result
@@ -14,9 +14,9 @@ class BackendRunnerExt(BackendRunner):
         self.next_result = result
 
     def _get_instance(self, backend_id: str,
-                      data_file: Union[None, str] = None) -> minizinc.Instance:
+                      data_file: Optional[str] = None) -> minizinc.Instance:
         return self.next_instance()
 
     def _get_result(self, backend_id: str, instance: minizinc.Instance,
-                    param: Union[None, Tuple[str, int]] = None) -> Result:
+                    param: Optional[Tuple[str, int]] = None) -> Result:
         return self.next_result()
