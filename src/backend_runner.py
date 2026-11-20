@@ -6,7 +6,7 @@ from datetime import timedelta
 from src.result import Result
 from src.outputters.outputter import Outputter
 from .aux import filter_minizinc_backends
-from warnings import simplefilter, catch_warnings
+from warnings import filterwarnings, resetwarnings, simplefilter, catch_warnings
 
 
 class BackendRunner:
@@ -105,12 +105,13 @@ class BackendRunner:
             if '--intermediate' in kwargs:
                 kwargs['intermediate_solutions'] = kwargs.pop('--intermediate')
             kwargs['timeout'] = timedelta(milliseconds=self.timeout)
-            if self.get_config(backend_id).get('ignore-warnings', False):
-                with catch_warnings():
-                    simplefilter('ignore', category=MiniZincWarning)
-                    mzn_result = instance.solve(**kwargs)
-            else:
-                mzn_result = instance.solve(**kwargs)
+            ignore_warnings: bool = self.get_config(backend_id).get(
+                'ignore-warnings', False)
+            if ignore_warnings:
+                filterwarnings('ignore', category=MiniZincWarning)
+            mzn_result = instance.solve(**kwargs)
+            if ignore_warnings:
+                resetwarnings()
             return Result(instance.method, mzn_result,
                           '--all-solutions' in self.get_extra(backend_id),
                           self.vars)
