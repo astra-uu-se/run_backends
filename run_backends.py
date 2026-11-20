@@ -52,7 +52,7 @@ if __name__ == '__main__':
                 if data_file not in seen_files:
                     found_files.append(data_file)
                     seen_files.add(data_file)
-        return found_files        
+        return found_files
 
     json_config_path = path.join(path.dirname(path.realpath(__file__)),
                                  'config.json')
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     data_group.add_argument('-d', '--data', dest='data_files',
                             metavar='<data file>.{dzn, json}', nargs='*',
-                            type=file_path, 
+                            type=file_path,
                             help='The dzn or JSON instance file(s) to run the '
                             'model on. This flag is mutually exclusive with '
                             '-r (--param).')

@@ -27,7 +27,7 @@ class Result:
     @property
     def sat(self) -> bool:
         return self._result.status == minizinc.result.Status.SATISFIED or (
-            (self._all_solutions or self.all_solutions) and 
+            (self._all_solutions or self.all_solutions) and
             self._result.solution is not None)
 
     @property
@@ -156,7 +156,7 @@ class Result:
 
     def solutions(self) -> List:
         if self._result.solution is None:
-           return []
+            return []
         if isinstance(self._result.solution, list):
             return [s.__dict__ for s in self._result.solution]
         return [self._result.solution.__dict__]

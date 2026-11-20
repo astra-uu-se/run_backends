@@ -1,5 +1,5 @@
 
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Optional
 import minizinc
 from ..backend_runner import BackendRunner
 from ..result import Result

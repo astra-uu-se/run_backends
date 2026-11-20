@@ -23,7 +23,8 @@
     "yuck": {
       "extra": {
         "--parallel": 8
-      }
+      },
+      "ignore-warnings": true
     }
   }
 }

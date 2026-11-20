@@ -1,10 +1,12 @@
 import minizinc
+from minizinc.error import MiniZincWarning
 import logging
 from typing import List, Dict, Any, Union, Tuple, Optional
 from datetime import timedelta
 from src.result import Result
 from src.outputters.outputter import Outputter
 from .aux import filter_minizinc_backends
+from warnings import simplefilter, catch_warnings
 
 
 class BackendRunner:
@@ -15,6 +17,9 @@ class BackendRunner:
     backends: List[Tuple[str, str]] = []
     outputters: List[Outputter] = []
     extra: Dict[str, Union[str, bool]] = {}
+
+    def get_config(self, backend_id: str) -> Dict[str, Any]:
+        return self.backend_config.get(backend_id, {})
 
     def get_extra(self, backend_id: str) -> Dict[str, str]:
         return dict(self.backend_config.get(backend_id, {}).get('extra', {}),
@@ -100,7 +105,12 @@ class BackendRunner:
             if '--intermediate' in kwargs:
                 kwargs['intermediate_solutions'] = kwargs.pop('--intermediate')
             kwargs['timeout'] = timedelta(milliseconds=self.timeout)
-            mzn_result = instance.solve(**kwargs)
+            if self.get_config(backend_id).get('ignore-warnings', False):
+                with catch_warnings():
+                    simplefilter('ignore', category=MiniZincWarning)
+                    mzn_result = instance.solve(**kwargs)
+            else:
+                mzn_result = instance.solve(**kwargs)
             return Result(instance.method, mzn_result,
                           '--all-solutions' in self.get_extra(backend_id),
                           self.vars)

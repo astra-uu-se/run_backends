@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union, Dict, Optional
+from typing import List, Tuple, Dict, Optional
 from .result import Result
 import logging
 import matplotlib.pyplot as plt

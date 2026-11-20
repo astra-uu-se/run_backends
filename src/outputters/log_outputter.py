@@ -8,13 +8,13 @@ import re
 
 
 def get_mzn_version() -> str:
-  version_str = minizinc.default_driver.minizinc_version
-  if not isinstance(version_str, str):
-    return 'UNKNOWN'
-  match = re.search(r'version\s*([\d.]+)', version_str)
-  if match is None:
-    return 'UNKNOWN'
-  return match.group(1)
+    version_str = minizinc.default_driver.minizinc_version
+    if not isinstance(version_str, str):
+        return 'UNKNOWN'
+    match = re.search(r'version\s*([\d.]+)', version_str)
+    if match is None:
+        return 'UNKNOWN'
+    return match.group(1)
 
 
 class LogOutputter(Outputter):
@@ -69,7 +69,7 @@ class LogOutputter(Outputter):
         
         backend_padding = 1 + max((len(n) for _, n in backends), default=0)
         for backend_id, backend_name in backends:
-            self.logger.info(f'  ' +
+            self.logger.info('  ' +
                              f'{backend_name};'.ljust(backend_padding) +
                              f' id: {backend_id}')
             for flag, val in backend_extra_flags.get(backend_id, dict()).items():

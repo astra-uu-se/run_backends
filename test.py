@@ -1,5 +1,4 @@
 import unittest
-from src.test.backend_runner_tester import BackendRunnerTester
 import logging
 
 if __name__ == '__main__':
